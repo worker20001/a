@@ -1,0 +1,32 @@
+name: Run SHYAM Workflow
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  run_SHYAM_workflow:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pymongo python-telegram-bot certifi
+
+      - name: Make ultra executable
+        run: chmod +x ultra
+
+      - name: Run soul.py
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python3 soul.py
